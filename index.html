@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	#left{
+		border:1px #ccc solid;
+		width: 450px;
+		height: 450px;
+
+		position: relative;
+	}
+	#left img{
+		width: 450px;
+		height: 450px;
+	}
+	#left #mask{
+		width: 150px;
+		height: 150px;
+		background-color: yellow;
+		opacity: 0.5;
+		cursor: move;
+		display: none;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	#left,#right{
+		float:left;
+	}
+	#right{
+		width: 500px;
+		height: 500px;
+		border:1px #ccc solid;
+		overflow:hidden;
+		margin-left: -1px;
+		display: none;
+	}
+	#right img{
+		width: 800px;
+		height: 800px;
+	}
+
+
+	</style>
+</head>
+<body>
+	<div id="main">
+		<div id="left">
+			<img id="leftImg" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505454758791&di=099739f8a2c71299cf32ac86ad75d39a&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201608%2F15%2F20160815041421_fGZLK.jpeg">
+			<div id="mask"></div>
+		</div>
+		<div id="right">
+			<img id='rightImg' src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505454758791&di=099739f8a2c71299cf32ac86ad75d39a&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201608%2F15%2F20160815041421_fGZLK.jpeg">
+		</div>
+	</div>
+
+	<script type="text/javascript" src='jquery-1.11.2.js'></script>
+	<script type="text/javascript">
+
+		var $left = $('#left');
+		var $right = $('#right');
+		var $leftImg = $('#leftImg');
+		var $rightImg = $('#rightImg');
+		var $mask = $('#mask');
+		var $main = $('#main');
+
+		var a = $rightImg.outerWidth();
+		var b = $leftImg.outerWidth();
+		var c = $right.innerHeight();
+		var d = b*c/a;
+		$mask.height(d + "px");
+		$mask.width(d + "px");
+		
+		// $mask.height() = $mask.width();
+
+
+		$main.mousemove(function(event) {
+			$mask.css("display","block");
+			$right.css("display","block");
+
+		var l = event.clientX - $mask.innerWidth()/2 - $main.offset().left;
+			var t = event.clientY - $mask.innerHeight()/2 - $main.offset().top;
+
+			var minX = 0;
+			var maxX = $left.innerWidth()- d;
+			var minY = 0;
+			var maxY = $left.innerHeight() - d;
+
+			if(l <= minX){
+			l = minX;
+			}
+			if(l >= maxX){
+			l = maxX;
+			}
+			if(t <= minY){
+			t = minY;
+			}
+			if(t >= maxY){
+			t = maxY;
+			}
+			
+			$mask.css("left",""+l+"px");
+			$mask.css("top",""+t+"px");
+
+
+
+			var bigMaxX = $rightImg.outerHeight() - $right.innerHeight();
+			var bigMaxY = $rightImg.outerHeight()- $right.innerHeight();
+
+			var bigLeft = (l*bigMaxX)/maxX;
+			var bigTop = (t*bigMaxX)/maxY;
+
+			$right.scrollLeft(bigLeft);
+			$right.scrollTop(bigTop);
+		});
+
+		$mask.mouseup(function(event) {
+			$mask.mousemove = null;
+		});
+	</script>
+</body>
+</html>
